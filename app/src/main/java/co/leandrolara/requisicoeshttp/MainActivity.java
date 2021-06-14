@@ -34,16 +34,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 MyTask task = new MyTask();
                 String urlApi = "https://blockchain.info/ticker";
-                task.execute(urlApi);
+                String cep = "25555050";
+                String urlCep = "https://viacep.com.br/ws/" + cep + "/json/";
+                task.execute(urlCep);
             }
         });
+
     }
 
     class MyTask extends AsyncTask<String, Void, String>{
 
         @Override
         protected void onPreExecute() {
-
+            super.onPreExecute();
         }
 
         @Override
@@ -55,13 +58,14 @@ public class MainActivity extends AppCompatActivity {
             StringBuffer buffer = null;
 
             try {
+
                 URL url = new URL(stringUrl);
                 HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 
-                // Recupera os dados e Bytes
+                // Recupera os dados em Bytes
                 inputStream = conexao.getInputStream();
 
-                //InputStreamReader lê os dados em Bytes e decodifica para caracteres
+                //inputStreamReader lê os dados em Bytes e decodifica para caracteres
                 inputStreamReader = new InputStreamReader( inputStream );
 
                 //Objeto utilizado para leitura dos caracteres do InpuStreamReader
@@ -69,12 +73,9 @@ public class MainActivity extends AppCompatActivity {
                 buffer = new StringBuffer();
                 String linha = "";
 
-                while ((linha = reader.readLine()) != null){
+                while((linha = reader.readLine()) != null){
                     buffer.append( linha );
                 }
-
-
-
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -91,4 +92,5 @@ public class MainActivity extends AppCompatActivity {
             textoResultado.setText( resultado );
         }
     }
+
 }
