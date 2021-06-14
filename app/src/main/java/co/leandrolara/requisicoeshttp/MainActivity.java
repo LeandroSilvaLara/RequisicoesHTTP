@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,12 +50,31 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
             String stringUrl = strings[0];
+            InputStream inputStream = null;
+            InputStreamReader inputStreamReader = null;
+            StringBuffer buffer = null;
 
             try {
                 URL url = new URL(stringUrl);
                 HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 
-                InputStream inputStream = conexao.getInputStream();
+                // Recupera os dados e Bytes
+                inputStream = conexao.getInputStream();
+
+                //InputStreamReader lê os dados em Bytes e decodifica para caracteres
+                inputStreamReader = new InputStreamReader( inputStream );
+
+                //Objeto utilizado para leitura dos caracteres do InpuStreamReader
+                BufferedReader reader = new BufferedReader( inputStreamReader );
+                buffer = new StringBuffer();
+                String linha = "";
+
+                while ((linha = reader.readLine()) != null){
+                    buffer.append( linha );
+                }
+
+
+
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -61,12 +82,13 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            return null;
+            return buffer.toString();
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(String resultado) {
+            super.onPostExecute(resultado);
+            textoResultado.setText( resultado );
         }
     }
 }
