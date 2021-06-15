@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 String urlApi = "https://blockchain.info/ticker";
                 String cep = "25555050";
                 String urlCep = "https://viacep.com.br/ws/" + cep + "/json/";
-                task.execute(urlCep);
+                task.execute(urlApi);
             }
         });
 
@@ -93,29 +93,43 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String resultado) {
             super.onPostExecute(resultado);
 
+            /*
             String logradouro = null;
             String cep = null;
             String complemento = null;
             String bairro = null;
             String localidade = null;
             String uf = null;
+            */
 
-
+            String valorMoeda = null;
+            String objetoValor = null;
+            String simbolo = null;
 
             try {
-                JSONObject jsonObject = new JSONObject(resultado);
-                logradouro = jsonObject.getString("logradouro");
+                //JSONObject jsonObject = new JSONObject(resultado);
+                /*logradouro = jsonObject.getString("logradouro");
                 cep = jsonObject.getString("cep");
                 complemento = jsonObject.getString("complemento");
                 bairro = jsonObject.getString("bairro");
                 localidade = jsonObject.getString("localidade");
-                uf = jsonObject.getString("uf");
+                uf = jsonObject.getString("uf"); */
+
+                JSONObject jsonObject = new JSONObject(resultado);
+                objetoValor  = jsonObject.getString("BRL");
+
+                JSONObject jsonObjectReal = new JSONObject(objetoValor);
+                valorMoeda = jsonObjectReal.getString("last");
+                simbolo = jsonObjectReal.getString("symbol");
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
             //textoResultado.setText( resultado );
-            textoResultado.setText( localidade+" / "+cep+" / "+complemento+" / "+bairro+" / "+localidade+" / "+uf  );
+            //textoResultado.setText( localidade+" / "+cep+" / "+complemento+" / "+bairro+" / "+localidade+" / "+uf  );
+            textoResultado.setText( simbolo +"  "+valorMoeda );
         }
     }
 
